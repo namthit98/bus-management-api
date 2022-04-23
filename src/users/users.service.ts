@@ -1,5 +1,13 @@
 import { Model } from 'mongoose';
-import { Inject, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { omit } from 'lodash';
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.interface';
@@ -11,24 +19,92 @@ export class UsersService {
     private userModel: Model<User>,
   ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    const existedUser = await this.userModel.findOne({
+      username: createUserDto.username,
+    });
+
+    if (existedUser) {
+      throw new ConflictException('Username is existed.');
+    }
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(createUserDto.password, salt);
+
+    return this.userModel.create({
+      ...createUserDto,
+      password: hash,
+    });
   }
 
   async findAll() {
-    console.log(await this.userModel.find());
-    return `This action returns all users`;
+    const users = await this.userModel.find();
+
+    return users;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    const user = await this.userModel.findOne({
+      _id: id,
+      deleted: false,
+    });
+
+    if (!user) {
+      throw new NotFoundException('User is not found.');
+    }
+
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(id);
+
+    await this.userModel.updateOne({ _id: user._id }, { ...updateUserDto });
+
+    return true;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const user = await this.findOne(id);
+
+    await this.userModel.updateOne({ _id: user._id }, { deleted: true });
+
+    return true;
+  }
+
+  async me(id: string) {
+    const user = await this.userModel.findOne({
+      _id: id,
+      deleted: false,
+    });
+
+    if (!user) {
+      throw new NotFoundException('User is not found.');
+    }
+
+    return user;
+  }
+
+  async changePassword(currentUser: User, { oldpassword, password }) {
+    const user = await this.userModel.findOne({
+      _id: currentUser?._id,
+      deleted: false,
+    });
+
+    if (!user) {
+      throw new NotFoundException('Account is not found');
+    }
+
+    const isMatch = await bcrypt.compare(oldpassword, user.password);
+
+    if (!isMatch) {
+      throw new UnauthorizedException('Sai mật khẩu cũ');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(password, salt);
+
+    await this.userModel.updateOne({ _id: user._id }, { password: hash });
+
+    return true;
   }
 }
