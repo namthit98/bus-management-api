@@ -11,6 +11,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.interface';
+import { FindAllUserDto } from './dto/find-all-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -36,8 +37,36 @@ export class UsersService {
     });
   }
 
-  async findAll() {
-    const users = await this.userModel.find();
+  async findAll(queries: FindAllUserDto) {
+    const query: any = {
+      deleted: false,
+    };
+
+    if (queries.searchText) {
+      query['$or'] = [
+        {
+          username: {
+            $regex: new RegExp(queries.searchText),
+            $options: 'i',
+          },
+        },
+        {
+          fullname: {
+            $regex: new RegExp(queries.searchText),
+            $options: 'i',
+          },
+        },
+        {
+          phone: { $regex: new RegExp(queries.searchText), $options: 'i' },
+        },
+      ];
+    }
+
+    if (queries.role && queries.role !== 'all') {
+      query.role = { $eq: queries.role };
+    }
+
+    const users = await this.userModel.find(query).sort('-createdAt');
 
     return users;
   }
@@ -58,7 +87,21 @@ export class UsersService {
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
 
-    await this.userModel.updateOne({ _id: user._id }, { ...updateUserDto });
+    console.log(updateUserDto);
+
+    const { password, ...userInfo } = updateUserDto;
+
+    const savedData: any = {
+      ...userInfo,
+    };
+
+    if (password) {
+      const salt = await bcrypt.genSalt();
+      const hash = await bcrypt.hash(password, salt);
+      savedData.password = hash;
+    }
+
+    await this.userModel.updateOne({ _id: user._id }, savedData);
 
     return true;
   }
@@ -84,7 +127,7 @@ export class UsersService {
     return user;
   }
 
-  async changePassword(currentUser: User, { oldpassword, password }) {
+  async changePassword(currentUser: User, { password, newpassword }) {
     const user = await this.userModel.findOne({
       _id: currentUser?._id,
       deleted: false,
@@ -94,14 +137,14 @@ export class UsersService {
       throw new NotFoundException('Account is not found');
     }
 
-    const isMatch = await bcrypt.compare(oldpassword, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      throw new UnauthorizedException('Sai mật khẩu cũ');
+      throw new UnauthorizedException('Old password not match');
     }
 
     const salt = await bcrypt.genSalt();
-    const hash = await bcrypt.hash(password, salt);
+    const hash = await bcrypt.hash(newpassword, salt);
 
     await this.userModel.updateOne({ _id: user._id }, { password: hash });
 

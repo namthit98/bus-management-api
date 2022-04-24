@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,6 +16,7 @@ import { Authorization } from 'src/decorators/authorization.decorator';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from './users.interface';
 import { ChangePasswordDto } from './dto/change-user-password.dto';
+import { FindAllUserDto } from './dto/find-all-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -26,8 +28,8 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() queries: FindAllUserDto) {
+    return this.usersService.findAll(queries);
   }
 
   @Get(':id')

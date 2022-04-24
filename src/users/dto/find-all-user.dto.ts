@@ -15,4 +15,8 @@ export class FindAllUserDto {
   @IsString()
   @IsOptional()
   searchText: string;
+
+  @IsString()
+  @IsOptional()
+  role: string;
 }

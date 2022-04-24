@@ -21,6 +21,7 @@ export class AuthService {
   async login(loginAuthDto: LoginAuthDto) {
     const existedUser = await this.userModel.findOne({
       username: loginAuthDto.username,
+      deleted: false,
     });
 
     if (!existedUser) {
