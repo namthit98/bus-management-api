@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/authorization.guard';
 import { PermissionGuard } from './guards/permission.guard';
+import { RoutesModule } from './routes/routes.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PermissionGuard } from './guards/permission.guard';
     }),
     UsersModule,
     AuthModule,
+    RoutesModule,
   ],
   controllers: [AppController],
   providers: [

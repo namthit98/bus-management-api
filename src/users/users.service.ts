@@ -1,6 +1,5 @@
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
-import { omit } from 'lodash';
 import {
   ConflictException,
   Inject,
@@ -86,8 +85,6 @@ export class UsersService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
-
-    console.log(updateUserDto);
 
     const { password, ...userInfo } = updateUserDto;
 
