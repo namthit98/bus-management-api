@@ -5,7 +5,7 @@ export const coachesProviders = [
   {
     provide: 'COACH_MODEL',
     useFactory: (connection: Connection) =>
-      connection.model('COACH', CoachSchema),
+      connection.model('Coach', CoachSchema),
     inject: ['DATABASE_CONNECTION'],
   },
 ];

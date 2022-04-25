@@ -9,6 +9,8 @@ import { AuthGuard } from './guards/authorization.guard';
 import { PermissionGuard } from './guards/permission.guard';
 import { RoutesModule } from './routes/routes.module';
 import { CoachesModule } from './coaches/coaches.module';
+import { LinesModule } from './lines/lines.module';
+import { TicketsModule } from './tickets/tickets.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { CoachesModule } from './coaches/coaches.module';
     AuthModule,
     RoutesModule,
     CoachesModule,
+    LinesModule,
+    TicketsModule,
   ],
   controllers: [AppController],
   providers: [

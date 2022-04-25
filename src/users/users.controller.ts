@@ -23,26 +23,36 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @Authorization(true)
+
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
+  @Authorization(true)
+
   findAll(@Query() queries: FindAllUserDto) {
     return this.usersService.findAll(queries);
   }
 
   @Get(':id')
+  @Authorization(true)
+
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
+  @Authorization(true)
+
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
+  @Authorization(true)
+
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

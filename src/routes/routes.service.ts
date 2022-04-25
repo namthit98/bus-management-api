@@ -1,4 +1,5 @@
 import { Model } from 'mongoose';
+import { uniq } from 'lodash';
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRouteDto } from './dto/create-route.dto';
 import { UpdateRouteDto } from './dto/update-route.dto';
@@ -69,5 +70,16 @@ export class RoutesService {
     await this.routeModel.updateOne({ _id: route._id }, { deleted: true });
 
     return true;
+  }
+
+  async getAllStartingPointAndDestination() {
+    const routes = await this.routeModel.find();
+    const startingPoints = routes.map((x: any) => x.startingPoint);
+    const destinations = routes.map((x: any) => x.destination);
+
+    return {
+      startingPoints: uniq(startingPoints),
+      destinations: uniq(destinations),
+    };
   }
 }
