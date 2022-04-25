@@ -8,6 +8,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './guards/authorization.guard';
 import { PermissionGuard } from './guards/permission.guard';
 import { RoutesModule } from './routes/routes.module';
+import { CoachesModule } from './coaches/coaches.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RoutesModule } from './routes/routes.module';
     UsersModule,
     AuthModule,
     RoutesModule,
+    CoachesModule,
   ],
   controllers: [AppController],
   providers: [

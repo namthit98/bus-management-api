@@ -39,6 +39,7 @@ export class UsersService {
   async findAll(queries: FindAllUserDto) {
     const query: any = {
       deleted: false,
+      role: { $ne: 'admin' },
     };
 
     if (queries.searchText) {
@@ -74,6 +75,7 @@ export class UsersService {
     const user = await this.userModel.findOne({
       _id: id,
       deleted: false,
+      role: { $ne: 'admin' },
     });
 
     if (!user) {
