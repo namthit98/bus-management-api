@@ -49,7 +49,15 @@ export class TicketsService {
     return ticket.save();
   }
 
-  remove(id: string) {
-    return this.ticketModel.deleteOne({ _id: id });
+  async remove(id: string) {
+    const line = await this.lineModel.findOne({
+      tickets: id,
+    });
+
+    if (line) {
+      line.tickets = line.tickets.filter((x) => x.toString() !== id);
+    }
+
+    return Promise.all([line.save(), this.ticketModel.deleteOne({ _id: id })]);
   }
 }

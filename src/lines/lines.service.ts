@@ -14,6 +14,7 @@ import { Line } from './line.interface';
 import { FindAllLineDto } from './dto/find-all-line.dto';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { User } from 'src/users/users.interface';
+import { Ticket } from 'src/tickets/ticket.interface';
 
 @Injectable()
 export class LinesService {
@@ -24,6 +25,8 @@ export class LinesService {
     private coachModel: Model<Coach>,
     @Inject('ROUTE_MODEL')
     private routeModel: Model<Route>,
+    @Inject('TICKET_MODEL')
+    private ticketModel: Model<Ticket>,
   ) {}
 
   async create(createLineDto: CreateLineDto) {
@@ -202,7 +205,18 @@ export class LinesService {
     return true;
   }
 
-  remove(id: string) {
-    return this.lineModel.deleteOne({ _id: id });
+  async remove(id: string) {
+    const line = await this.lineModel.findOne({
+      _id: id,
+    });
+
+    const ticketIds = line.tickets;
+
+    return Promise.all([
+      this.ticketModel.deleteMany({
+        _id: { $in: ticketIds },
+      }),
+      this.lineModel.deleteOne({ _id: id }),
+    ]);
   }
 }

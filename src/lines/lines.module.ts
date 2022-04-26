@@ -5,6 +5,7 @@ import { DatabaseModule } from 'src/database.module';
 import { routesProviders } from 'src/routes/routes.providers';
 import { coachesProviders } from 'src/coaches/coaches.providers';
 import { linesProviders } from './lines.providers';
+import { ticketsProviders } from 'src/tickets/tickets.providers';
 
 @Module({
   imports: [DatabaseModule],
@@ -14,6 +15,7 @@ import { linesProviders } from './lines.providers';
     ...routesProviders,
     ...coachesProviders,
     ...linesProviders,
+    ...ticketsProviders,
   ],
 })
 export class LinesModule {}

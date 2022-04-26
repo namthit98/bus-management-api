@@ -30,7 +30,6 @@ export class ClientsService {
       .findOne({ _id: createTicketDto.lineId })
       .populate('coach');
 
-    console.log(parseInt(line.coach.seats) - line.tickets.length);
     if (
       parseInt(line.coach.seats) - line.tickets.length <
       createTicketDto.numberOfTickets
