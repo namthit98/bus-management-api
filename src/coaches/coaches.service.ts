@@ -52,7 +52,7 @@ export class CoachesService {
 
     const coaches = await this.coachModel
       .find(query)
-      .populate('driver route')
+      .populate('driver')
       .sort('-createdAt');
 
     return coaches;
@@ -62,17 +62,17 @@ export class CoachesService {
     const coaches = await this.coachModel.find().select('driver');
     const driverIds = coaches.map((x) => x.driver);
 
-    const [users, routes] = await Promise.all([
+    const [users] = await Promise.all([
       this.userModel
         .find({
           _id: { $nin: driverIds },
           role: 'driver',
         })
         .select('fullname _id'),
-      this.routeModel.find().select('startingPoint destination _id'),
+      // this.routeModel.find().select('startingPoint destination _id'),
     ]);
 
-    return { users, routes };
+    return { users };
   }
 
   async findOne(id: string) {
@@ -81,7 +81,7 @@ export class CoachesService {
         _id: id,
         deleted: false,
       })
-      .populate('route driver');
+      .populate('driver');
 
     if (!coach) {
       throw new NotFoundException('Coach is not found.');

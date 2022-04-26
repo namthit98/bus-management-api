@@ -13,8 +13,8 @@ export class CreateCoachDto {
   @IsString()
   type: string;
 
-  @IsString()
-  route: string;
+  // @IsString()
+  // route: string;
 
   @IsString()
   driver: string;

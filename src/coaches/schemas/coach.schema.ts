@@ -6,10 +6,10 @@ export const CoachSchema = new mongoose.Schema(
     licensePlates: String,
     seats: Number,
     type: String,
-    route: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Route',
-    },
+    // route: {
+    //   type: mongoose.Types.ObjectId,
+    //   ref: 'Route',
+    // },
     driver: {
       type: mongoose.Types.ObjectId,
       ref: 'User',

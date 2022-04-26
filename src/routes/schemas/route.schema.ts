@@ -7,6 +7,8 @@ export const RouteSchema = new mongoose.Schema(
     price: Number,
     timeShift: Number,
     distance: Number,
+    pickupPoint: String,
+    dropoffPoint: String,
     deleted: {
       type: Boolean,
       default: false,

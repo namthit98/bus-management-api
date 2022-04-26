@@ -15,4 +15,10 @@ export class CreateRouteDto {
 
   @IsNumber()
   distance: number;
+
+  @IsString()
+  pickupPoint: string;
+
+  @IsString()
+  dropoffPoint: string;
 }
