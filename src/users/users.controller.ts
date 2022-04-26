@@ -17,6 +17,7 @@ import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { User } from './users.interface';
 import { ChangePasswordDto } from './dto/change-user-password.dto';
 import { FindAllUserDto } from './dto/find-all-user.dto';
+import { Permission } from 'src/decorators/permission.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -24,35 +25,35 @@ export class UsersController {
 
   @Post()
   @Authorization(true)
-
+  @Permission(['admin', 'staff'])
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
   @Authorization(true)
-
+  @Permission(['admin', 'staff'])
   findAll(@Query() queries: FindAllUserDto) {
     return this.usersService.findAll(queries);
   }
 
   @Get(':id')
   @Authorization(true)
-
+  @Permission(['admin', 'staff'])
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
   @Authorization(true)
-
+  @Permission(['admin', 'staff'])
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   @Authorization(true)
-
+  @Permission(['admin', 'staff'])
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }

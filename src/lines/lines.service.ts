@@ -14,6 +14,7 @@ import { Route } from 'src/routes/routes.interface';
 import { Line } from './line.interface';
 import { FindAllLineDto } from './dto/find-all-line.dto';
 import { CreateTicketDto } from './dto/create-ticket.dto';
+import { User } from 'src/users/users.interface';
 
 @Injectable()
 export class LinesService {
@@ -112,8 +113,14 @@ export class LinesService {
     return line.save();
   }
 
-  async findAll(queries: FindAllLineDto) {
+  async findAll(queries: FindAllLineDto, user: User) {
     const query: any = {};
+
+
+    if(user.role === 'driver') {
+      const coach = await this.coachModel.findOne({driver: user._id})
+      query.coach = coach._id
+    }
 
     let routeQuery: any = {}
     if (queries.startingPoint && queries.startingPoint !== 'all') {
