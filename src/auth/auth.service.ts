@@ -13,7 +13,7 @@ import { LoginAuthDto } from './dtos/login-auth.dto';
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly jwtService: JwtService,
+    private jwtService: JwtService,
     @Inject('USER_MODEL')
     private userModel: Model<User>,
   ) {}

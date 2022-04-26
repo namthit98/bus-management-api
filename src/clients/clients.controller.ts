@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { CreateTicketDto } from './dto/create-ticket.dto';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('clients')
 export class ClientsController {
@@ -17,6 +19,21 @@ export class ClientsController {
   @Post('/tickets')
   createTicket(@Body() createTicketDto: CreateTicketDto) {
     return this.clientsService.createTicket(createTicketDto);
+  }
+
+  @Post('/register')
+  register(@Body() registerDto: RegisterDto) {
+    return this.clientsService.register(registerDto);
+  }
+
+  @Post('/login')
+  login(@Body() loginDto: LoginDto) {
+    return this.clientsService.login(loginDto);
+  }
+
+  @Post('/token/valid')
+  validToken(@Body() body: any) {
+    return this.clientsService.validToken(body?.token);
   }
 
   @Get('/routes')

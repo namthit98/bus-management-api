@@ -1,6 +1,6 @@
-import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateUserDto {
+export class RegisterDto {
   @IsString()
   username: string;
 
@@ -24,7 +24,4 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   identification: string;
-
-  @IsString()
-  role: string;
 }
