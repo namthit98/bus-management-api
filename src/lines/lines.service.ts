@@ -1,6 +1,5 @@
 import { Model } from 'mongoose';
-import {isEmpty} from 'lodash'
-import * as moment from 'moment';
+import { isEmpty } from 'lodash';
 import {
   ConflictException,
   Inject,
@@ -62,9 +61,6 @@ export class LinesService {
       ],
     });
 
-    console.log(createLineDto);
-    console.log(existedLines);
-
     if (existedLines && existedLines.length) {
       throw new ConflictException('Time is duplicate');
     }
@@ -116,27 +112,26 @@ export class LinesService {
   async findAll(queries: FindAllLineDto, user: User) {
     const query: any = {};
 
-
-    if(user.role === 'driver') {
-      const coach = await this.coachModel.findOne({driver: user._id})
-      query.coach = coach._id
+    if (user.role === 'driver') {
+      const coach = await this.coachModel.findOne({ driver: user._id });
+      query.coach = coach._id;
     }
 
-    let routeQuery: any = {}
+    const routeQuery: any = {};
     if (queries.startingPoint && queries.startingPoint !== 'all') {
-      routeQuery.startingPoint = queries.startingPoint
+      routeQuery.startingPoint = queries.startingPoint;
     }
 
     if (queries.destination && queries.destination !== 'all') {
-      routeQuery.destination = queries.destination
+      routeQuery.destination = queries.destination;
     }
 
-    if(!isEmpty(routeQuery)) {
-      const routes = await this.routeModel.find(routeQuery)
-      const routeIds = routes.map(x => x._id)
+    if (!isEmpty(routeQuery)) {
+      const routes = await this.routeModel.find(routeQuery);
+      const routeIds = routes.map((x) => x._id);
       query.route = {
-        $in: routeIds
-      }
+        $in: routeIds,
+      };
     }
 
     if (queries.startTime && !queries.endTime) {
@@ -171,7 +166,7 @@ export class LinesService {
     const lines = await this.lineModel
       .find(query)
       .populate('route coach tickets')
-      .sort('startTime')
+      .sort('startTime');
     return lines;
   }
 

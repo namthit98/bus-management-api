@@ -11,6 +11,7 @@ import { RoutesModule } from './routes/routes.module';
 import { CoachesModule } from './coaches/coaches.module';
 import { LinesModule } from './lines/lines.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TicketsModule } from './tickets/tickets.module';
     CoachesModule,
     LinesModule,
     TicketsModule,
+    ClientsModule,
   ],
   controllers: [AppController],
   providers: [

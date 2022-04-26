@@ -4,6 +4,7 @@ export const ticketSchema = new mongoose.Schema(
   {
     fullname: String,
     phone: String,
+    email: String,
     status: {
       type: String,
       default: 'unpaid',
