@@ -8,6 +8,7 @@ import {
   Delete,
   Request,
   UnauthorizedException,
+  Query,
 } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { ChangeCustomerPasswordDto } from './dto/change-customer-password.dto';
@@ -19,6 +20,15 @@ import { UpdateCustomerInformationDto } from './dto/update-customer-information'
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
+
+  @Get('/tickets')
+  getTickets(@Request() req: any) {
+    if (!req.headers.authorization) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+
+    return this.clientsService.getTickets(req.headers.authorization);
+  }
 
   @Post('/tickets')
   createTicket(@Body() createTicketDto: CreateTicketDto) {
@@ -55,6 +65,18 @@ export class ClientsController {
     );
   }
 
+  @Delete('/tickets/:ticketId/cancel')
+  cancelTicket(@Param('ticketId') ticketId, @Request() req: any) {
+    if (!req.headers.authorization) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+
+    return this.clientsService.cancelTicket(
+      ticketId,
+      req.headers.authorization,
+    );
+  }
+
   @Patch('/customers')
   updateCustomerInformation(
     @Body() updateCustomerInformationDto: UpdateCustomerInformationDto,
@@ -76,8 +98,13 @@ export class ClientsController {
   }
 
   @Get('/lines')
-  getLines() {
-    return this.clientsService.getLines().populate('route coach');
+  getLines(@Query() queries: any) {
+    return this.clientsService.getLines(queries);
+  }
+
+  @Get('/coaches/types')
+  getAllTypeOfCoach() {
+    return this.clientsService.getAllTypeOfCoach();
   }
 
   @Get('/starting-points-and-destinations')

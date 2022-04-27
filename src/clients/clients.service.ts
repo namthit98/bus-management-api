@@ -38,6 +38,26 @@ export class ClientsService {
     private userModel: Model<User>,
   ) {}
 
+  async getTickets(token: string) {
+    const customer = await this.validToken(token);
+    if (!customer) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+
+    return this.ticketModel
+      .find({
+        customer: customer._id,
+      })
+      .populate({
+        path: 'lineId',
+        populate: {
+          path: 'route',
+          model: 'Route',
+        },
+      })
+      .sort('-createdAt');
+  }
+
   async createTicket(createTicketDto: CreateTicketDto) {
     const line = await this.lineModel
       .findOne({ _id: createTicketDto.lineId })
@@ -139,6 +159,34 @@ export class ClientsService {
     return user;
   }
 
+  async cancelTicket(ticketId: string, token: string) {
+    const customer = await this.validToken(token);
+    if (!customer) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+
+    const line = await this.lineModel.findOne({
+      tickets: ticketId,
+    });
+
+    const tickets = await this.ticketModel.find({
+      lineId: line._id,
+    });
+
+    const ticketIds = tickets.map((x) => x?._id.toString());
+
+    if (line) {
+      line.tickets = line.tickets.filter(
+        (x) => !ticketIds.includes(x.toString()),
+      );
+    }
+
+    return Promise.all([
+      line.save(),
+      this.ticketModel.deleteMany({ lineId: line._id }),
+    ]);
+  }
+
   async changePassword(
     changeCustomerPasswordDto: ChangeCustomerPasswordDto,
     token: string,
@@ -201,8 +249,66 @@ export class ClientsService {
     return this.routeModel.find();
   }
 
-  getLines() {
-    return this.lineModel.find();
+  async getAllTypeOfCoach() {
+    const coaches = await this.coachModel.find();
+
+    const types = coaches.map((x) => x?.type);
+
+    return uniq(types);
+  }
+
+  async getLines(queries: any) {
+    const query: any = [
+      {
+        $match: {},
+      },
+    ];
+
+    query.push(
+      ...[
+        {
+          $lookup: {
+            from: 'coaches',
+            localField: 'coach',
+            foreignField: '_id',
+            as: 'coach',
+          },
+        },
+        {
+          $unwind: '$coach',
+        },
+        {
+          $lookup: {
+            from: 'routes',
+            localField: 'route',
+            foreignField: '_id',
+            as: 'route',
+          },
+        },
+        {
+          $unwind: '$route',
+        },
+      ],
+    );
+
+    if (queries.type) {
+      query.push({
+        $match: {
+          'coach.type': queries.type,
+        },
+      });
+    }
+
+    if (queries.price_sort) {
+      if (queries.price_sort === 'asc')
+        query.push({ $sort: { 'route.price': 1 } });
+      else if (queries.price_sort === 'desc')
+        query.push({ $sort: { 'route.price': -1 } });
+    }
+
+    const data = await this.lineModel.aggregate(query);
+
+    return data;
   }
 
   async getStartingPointsAndDestinations() {

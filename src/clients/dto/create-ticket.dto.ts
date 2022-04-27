@@ -12,6 +12,10 @@ export class CreateTicketDto {
   email: string;
 
   @IsString()
+  @IsOptional()
+  customer: string;
+
+  @IsString()
   lineId: string;
 
   @IsNumber()
