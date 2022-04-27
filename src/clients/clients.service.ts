@@ -259,7 +259,6 @@ export class ClientsService {
   }
 
   async getLines(queries: any) {
-    console.log(queries);
     const query: any = [
       {
         $match: {},
