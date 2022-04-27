@@ -19,7 +19,7 @@ import { CustomersModule } from './customers/customers.module';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'build'),
+      rootPath: join(__dirname, '..', 'build'),
     }),
     ConfigModule.forRoot({
       isGlobal: true,
