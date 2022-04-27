@@ -18,6 +18,8 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/users.interface';
+import { ChangeCustomerPasswordDto } from './dto/change-customer-password.dto';
+import { UpdateCustomerInformationDto } from './dto/update-customer-information';
 @Injectable()
 export class ClientsService {
   constructor(
@@ -135,6 +137,52 @@ export class ClientsService {
     }
 
     return user;
+  }
+
+  async changePassword(
+    changeCustomerPasswordDto: ChangeCustomerPasswordDto,
+    token: string,
+  ) {
+    const customer = await this.validToken(token);
+    if (!customer) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+
+    const isMatch = await bcrypt.compare(
+      changeCustomerPasswordDto.password,
+      customer.password,
+    );
+
+    if (!isMatch) {
+      throw new UnauthorizedException('Old password not match');
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hash = await bcrypt.hash(changeCustomerPasswordDto.newpassword, salt);
+
+    await this.customerModel.updateOne(
+      { _id: customer._id },
+      { password: hash },
+    );
+
+    return true;
+  }
+
+  async updateCustomerInformation(
+    updateCustomerInformationDto: UpdateCustomerInformationDto,
+    token: string,
+  ) {
+    const customer = await this.validToken(token);
+    if (!customer) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+
+    await this.customerModel.updateOne(
+      { _id: customer._id },
+      updateCustomerInformationDto,
+    );
+
+    return this.customerModel.findOne({ _id: customer._id });
   }
 
   findAll() {

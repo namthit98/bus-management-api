@@ -6,11 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Request,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ClientsService } from './clients.service';
+import { ChangeCustomerPasswordDto } from './dto/change-customer-password.dto';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { UpdateCustomerInformationDto } from './dto/update-customer-information';
 
 @Controller('clients')
 export class ClientsController {
@@ -34,6 +38,36 @@ export class ClientsController {
   @Post('/token/valid')
   validToken(@Body() body: any) {
     return this.clientsService.validToken(body?.token);
+  }
+
+  @Patch('/change-password')
+  changePassword(
+    @Body() changeCustomerPasswordDto: ChangeCustomerPasswordDto,
+    @Request() req: any,
+  ) {
+    if (!req.headers.authorization) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+
+    return this.clientsService.changePassword(
+      changeCustomerPasswordDto,
+      req.headers.authorization,
+    );
+  }
+
+  @Patch('/customers')
+  updateCustomerInformation(
+    @Body() updateCustomerInformationDto: UpdateCustomerInformationDto,
+    @Request() req: any,
+  ) {
+    if (!req.headers.authorization) {
+      throw new UnauthorizedException('Unauthorization');
+    }
+
+    return this.clientsService.updateCustomerInformation(
+      updateCustomerInformationDto,
+      req.headers.authorization,
+    );
   }
 
   @Get('/routes')
