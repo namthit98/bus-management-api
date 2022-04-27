@@ -64,6 +64,10 @@ export class ClientsService {
       .findOne({ _id: createTicketDto.lineId })
       .populate('coach');
 
+    if (!createTicketDto.customer) {
+      delete createTicketDto.customer;
+    }
+
     if (
       parseInt(line.coach.seats) - line.tickets.length <
       createTicketDto.numberOfTickets
@@ -296,8 +300,8 @@ export class ClientsService {
       query.push({
         $match: {
           startTime: {
-            $gte: moment(queries.date).startOf('day').toDate(),
-            $lte: moment(queries.date).endOf('day').toDate(),
+            $gte: moment.utc(queries.date).startOf('day').toDate(),
+            $lte: moment.utc(queries.date).endOf('day').toDate(),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
