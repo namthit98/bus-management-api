@@ -9,7 +9,7 @@ export const databaseProviders = [
       }
 
       return mongoose.connect(
-        `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@localhost:27017/bus_management?authSource=admin`,
+        `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.jxtsp.mongodb.net/bus_management?retryWrites=true&w=majority`,
       );
     },
   },
