@@ -297,8 +297,8 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
-      console.log(moment.utc(queries.date).utc().startOf('day').toDate(), 3);
-      console.log(moment.utc(queries.date).utc().endOf('day').toDate(), 3);
+      console.log(moment(queries.date).utc().startOf('day').toDate(), 3);
+      console.log(moment(queries.date).utc().endOf('day').toDate(), 3);
       query.push({
         $match: {
           startTime: {
