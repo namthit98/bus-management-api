@@ -20,6 +20,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/users.interface';
 import { ChangeCustomerPasswordDto } from './dto/change-customer-password.dto';
 import { UpdateCustomerInformationDto } from './dto/update-customer-information';
+import * as moment from 'moment';
 @Injectable()
 export class ClientsService {
   constructor(
@@ -258,6 +259,7 @@ export class ClientsService {
   }
 
   async getLines(queries: any) {
+    console.log(queries);
     const query: any = [
       {
         $match: {},
@@ -290,6 +292,19 @@ export class ClientsService {
         },
       ],
     );
+
+    if (queries.startingPoint && queries.destination && queries.date) {
+      query.push({
+        $match: {
+          startTime: {
+            $gte: moment(queries.date).startOf('day').toDate(),
+            $lte: moment(queries.date).endOf('day').toDate(),
+          },
+          'route.startingPoint': queries.startingPoint,
+          'route.destination': queries.destination,
+        },
+      });
+    }
 
     if (queries.type) {
       query.push({
