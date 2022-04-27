@@ -300,8 +300,8 @@ export class ClientsService {
       query.push({
         $match: {
           startTime: {
-            $gte: moment.utc(queries.date).startOf('day').toDate(),
-            $lte: moment.utc(queries.date).endOf('day').toDate(),
+            $gte: moment.utc(queries.date).startOf('day').utc().toDate(),
+            $lte: moment.utc(queries.date).endOf('day').utc().toDate(),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
