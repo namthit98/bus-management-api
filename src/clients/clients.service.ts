@@ -300,10 +300,7 @@ export class ClientsService {
     if (queries.startingPoint && queries.destination && queries.date) {
       console.log(queries.date, -1);
       console.log(
-        momentTz(queries.date, 'Asia/Ho_Chi_Minh')
-          .startOf('day')
-          .utc()
-          .toDate(),
+        momentTz(queries.date).startOf('day').tz('Asia/Ho_Chi_Minh').toDate(),
         0,
       );
       console.log(moment(queries.date).startOf('day').toDate(), 1);
@@ -311,12 +308,14 @@ export class ClientsService {
       query.push({
         $match: {
           startTime: {
-            $gte: momentTz(queries.date, 'Asia/Ho_Chi_Minh')
+            $gte: momentTz(queries.date)
               .startOf('day')
+              .tz('Asia/Ho_Chi_Minh')
               .utc()
               .toDate(),
-            $lte: momentTz(queries.date, 'Asia/Ho_Chi_Minh')
+            $lte: momentTz(queries.date)
               .endOf('day')
+              .tz('Asia/Ho_Chi_Minh')
               .utc()
               .toDate(),
           },
