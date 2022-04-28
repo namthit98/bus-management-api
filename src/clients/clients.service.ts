@@ -299,14 +299,26 @@ export class ClientsService {
 
     if (queries.startingPoint && queries.destination && queries.date) {
       console.log(queries.date, -1);
-      console.log(momentTz(queries.date).startOf('day').utc().toDate(), 0);
+      console.log(
+        momentTz(queries.date, 'Asia/Ho_Chi_Minh')
+          .startOf('day')
+          .utc()
+          .toDate(),
+        0,
+      );
       console.log(moment(queries.date).startOf('day').toDate(), 1);
       console.log(moment(queries.date).startOf('day').utc().toDate(), 3);
       query.push({
         $match: {
           startTime: {
-            $gte: momentTz(queries.date).startOf('day').utc().toDate(),
-            $lte: momentTz(queries.date).endOf('day').utc().toDate(),
+            $gte: momentTz(queries.date, 'Asia/Ho_Chi_Minh')
+              .startOf('day')
+              .utc()
+              .toDate(),
+            $lte: momentTz(queries.date, 'Asia/Ho_Chi_Minh')
+              .endOf('day')
+              .utc()
+              .toDate(),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
