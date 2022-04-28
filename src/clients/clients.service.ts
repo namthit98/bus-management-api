@@ -21,6 +21,7 @@ import { User } from 'src/users/users.interface';
 import { ChangeCustomerPasswordDto } from './dto/change-customer-password.dto';
 import { UpdateCustomerInformationDto } from './dto/update-customer-information';
 import * as moment from 'moment';
+import * as momentTz from 'moment-timezone';
 @Injectable()
 export class ClientsService {
   constructor(
@@ -297,15 +298,15 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
+      console.log(queries.date, -1);
+      console.log(momentTz(queries.date).utc().startOf('day').toDate(), 0);
       console.log(moment(queries.date).startOf('day').toDate(), 1);
-      console.log(moment(queries.date).endOf('day').toDate(), 1);
       console.log(moment(queries.date).utc().startOf('day').toDate(), 3);
-      console.log(moment(queries.date).utc().endOf('day').toDate(), 3);
       query.push({
         $match: {
           startTime: {
-            $gte: moment(queries.date).utc().startOf('day').toDate(),
-            $lte: moment(queries.date).utc().endOf('day').toDate(),
+            $gte: momentTz(queries.date).utc().startOf('day').toDate(),
+            $lte: momentTz(queries.date).utc().endOf('day').toDate(),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
