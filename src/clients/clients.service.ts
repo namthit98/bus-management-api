@@ -297,6 +297,8 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
+      console.log(moment(queries.date).startOf('day').toDate(), 1);
+      console.log(moment(queries.date).endOf('day').toDate(), 1);
       console.log(moment(queries.date).utc().startOf('day').toDate(), 3);
       console.log(moment(queries.date).utc().endOf('day').toDate(), 3);
       query.push({
