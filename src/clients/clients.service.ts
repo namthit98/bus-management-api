@@ -299,14 +299,14 @@ export class ClientsService {
 
     if (queries.startingPoint && queries.destination && queries.date) {
       console.log(queries.date, -1);
-      console.log(momentTz(queries.date).utc().startOf('day').toDate(), 0);
+      console.log(momentTz(queries.date).startOf('day').utc().toDate(), 0);
       console.log(moment(queries.date).startOf('day').toDate(), 1);
-      console.log(moment(queries.date).utc().startOf('day').toDate(), 3);
+      console.log(moment(queries.date).startOf('day').utc().toDate(), 3);
       query.push({
         $match: {
           startTime: {
-            $gte: momentTz(queries.date).utc().startOf('day').toDate(),
-            $lte: momentTz(queries.date).utc().endOf('day').toDate(),
+            $gte: momentTz(queries.date).startOf('day').utc().toDate(),
+            $lte: momentTz(queries.date).endOf('day').utc().toDate(),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
