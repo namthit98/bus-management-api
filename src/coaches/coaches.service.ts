@@ -67,6 +67,7 @@ export class CoachesService {
         .find({
           _id: { $nin: driverIds },
           role: 'driver',
+          deleted: false,
         })
         .select('fullname _id'),
       // this.routeModel.find().select('startingPoint destination _id'),

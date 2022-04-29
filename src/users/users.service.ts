@@ -11,12 +11,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './users.interface';
 import { FindAllUserDto } from './dto/find-all-user.dto';
+import { Coach } from 'src/coaches/coaches.interface';
 
 @Injectable()
 export class UsersService {
   constructor(
     @Inject('USER_MODEL')
     private userModel: Model<User>,
+    @Inject('COACH_MODEL')
+    private coachModel: Model<Coach>,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -107,6 +110,12 @@ export class UsersService {
 
   async remove(id: string) {
     const user = await this.findOne(id);
+
+    const coach = await this.coachModel.findOne({ driver: user._id });
+
+    if (coach) {
+      throw new ConflictException('This user is belong to one coach');
+    }
 
     await this.userModel.updateOne({ _id: user._id }, { deleted: true });
 
