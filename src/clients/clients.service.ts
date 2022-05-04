@@ -177,6 +177,7 @@ export class ClientsService {
 
     const tickets = await this.ticketModel.find({
       lineId: line._id,
+      customer: customer._id,
     });
 
     const ticketIds = tickets.map((x) => x?._id.toString());
@@ -189,7 +190,7 @@ export class ClientsService {
 
     return Promise.all([
       line.save(),
-      this.ticketModel.deleteMany({ lineId: line._id }),
+      this.ticketModel.deleteMany({ lineId: line._id, customer: customer._id }),
     ]);
   }
 
