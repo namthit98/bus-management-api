@@ -299,22 +299,22 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
-      console.log(queries.date, -1);
-      console.log(
-        momentTz(queries.date).startOf('day').tz('Asia/Ho_Chi_Minh').toDate(),
-        0,
-      );
-      console.log(moment(queries.date).startOf('day').toDate(), 1);
-      console.log(moment(queries.date).startOf('day').utc().toDate(), 3);
+      // console.log(queries.date, -1);
+      // console.log(
+      //   momentTz(queries.date).startOf('day').tz('Asia/Ho_Chi_Minh').toDate(),
+      //   0,
+      // );
+      // console.log(moment(queries.date).startOf('day').toDate(), 1);
+      // console.log(moment(queries.date).startOf('day').utc().toDate(), 3);
       query.push({
         $match: {
           startTime: {
-            $gte: momentTz(queries.date)
+            $gte: momentTz(new Date(queries.date))
               .startOf('day')
               .tz('Asia/Ho_Chi_Minh')
               .utc()
               .toDate(),
-            $lte: momentTz(queries.date)
+            $lte: momentTz(new Date(queries.date))
               .endOf('day')
               .tz('Asia/Ho_Chi_Minh')
               .utc()
