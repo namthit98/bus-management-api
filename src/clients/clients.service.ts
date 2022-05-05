@@ -318,12 +318,10 @@ export class ClientsService {
             $gte: momentTz(new Date(queries.date))
               .startOf('day')
               .tz('Asia/Ho_Chi_Minh')
-              .utc()
               .toDate(),
             $lte: momentTz(new Date(queries.date))
               .endOf('day')
               .tz('Asia/Ho_Chi_Minh')
-              .utc()
               .toDate(),
           },
           'route.startingPoint': queries.startingPoint,
