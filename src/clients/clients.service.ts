@@ -324,10 +324,16 @@ export class ClientsService {
 
       query.push({
         $match: {
-          startTime: {
-            $gte: sub(setSeconds(targetTime, 0), { hours: 7 }),
-            $lte: add(setSeconds(targetTime, 0), { hours: 17 }),
-          },
+          startTime:
+            process.env.NODE_ENV === 'production'
+              ? {
+                  $gte: sub(setSeconds(targetTime, 0), { hours: 7 }),
+                  $lte: add(setSeconds(targetTime, 0), { hours: 17 }),
+                }
+              : {
+                  $gte: setSeconds(targetTime, 0),
+                  $lte: add(setSeconds(targetTime, 0), { hours: 24 }),
+                },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
         },
