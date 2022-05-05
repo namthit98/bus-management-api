@@ -318,15 +318,15 @@ export class ClientsService {
 
       console.log(process.env.NODE_ENV);
       console.log({
-        $gte: setSeconds(targetTime, 0),
-        $lte: add(setSeconds(targetTime, 0), { hours: 24 }),
+        $gte: sub(setSeconds(targetTime, 0), { hours: 7 }),
+        $lte: add(setSeconds(targetTime, 0), { hours: 17 }),
       });
 
       query.push({
         $match: {
           startTime: {
-            $gte: setSeconds(targetTime, 0),
-            $lte: add(setSeconds(targetTime, 0), { hours: 24 }),
+            $gte: sub(setSeconds(targetTime, 0), { hours: 7 }),
+            $lte: add(setSeconds(targetTime, 0), { hours: 17 }),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
