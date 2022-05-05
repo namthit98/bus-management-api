@@ -320,17 +320,31 @@ export class ClientsService {
       // console.log(sub(targetTime, { hours: 7 }));
       // console.log(sub(endOfDay(targetTime), { hours: 7 }));
 
-      console.log({
-        $gte: targetTime,
-        $lte: add(targetTime, { hours: 24 }),
-      });
+      console.log(process.env.NODE_ENV);
+      console.log(
+        process.env.NODE_ENV === 'production'
+          ? {
+              $gte: sub(targetTime, { hours: 7 }),
+              $lte: add(targetTime, { hours: 17 }),
+            }
+          : {
+              $gte: targetTime,
+              $lte: add(targetTime, { hours: 24 }),
+            },
+      );
 
       query.push({
         $match: {
-          startTime: {
-            $gte: targetTime,
-            $lte: add(targetTime, { hours: 24 }),
-          },
+          startTime:
+            process.env.NODE_ENV === 'production'
+              ? {
+                  $gte: sub(targetTime, { hours: 7 }),
+                  $lte: add(targetTime, { hours: 17 }),
+                }
+              : {
+                  $gte: targetTime,
+                  $lte: add(targetTime, { hours: 24 }),
+                },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
         },
