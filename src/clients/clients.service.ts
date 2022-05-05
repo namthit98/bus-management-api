@@ -320,8 +320,8 @@ export class ClientsService {
       console.log(
         process.env.NODE_ENV === 'production'
           ? {
-              $gte: sub(targetTime, { hours: 14 }),
-              $lte: add(targetTime, { hours: 10 }),
+              $gte: sub(setSeconds(targetTime, 0), { hours: 7 }),
+              $lte: add(setSeconds(targetTime, 0), { hours: 17 }),
             }
           : {
               $gte: targetTime,
@@ -334,8 +334,8 @@ export class ClientsService {
           startTime:
             process.env.NODE_ENV === 'production'
               ? {
-                  $gte: sub(targetTime, { hours: 14 }),
-                  $lte: add(targetTime, { hours: 10 }),
+                  $gte: sub(setSeconds(targetTime, 0), { hours: 7 }),
+                  $lte: add(setSeconds(targetTime, 0), { hours: 17 }),
                 }
               : {
                   $gte: targetTime,
