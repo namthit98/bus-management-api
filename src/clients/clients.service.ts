@@ -305,13 +305,20 @@ export class ClientsService {
       console.log(new Date(queries.date));
       console.log(startOfDay(add(new Date(queries.date), { hours: 7 })), 1);
       console.log(endOfDay(add(new Date(queries.date), { hours: 7 })), 2);
+      console.log(process?.env?.NODE_ENV);
 
       query.push({
         $match: {
-          startTime: {
-            $gte: startOfDay(add(new Date(queries.date), { hours: 7 })),
-            $lte: endOfDay(add(new Date(queries.date), { hours: 7 })),
-          },
+          startTime:
+            process.env.NODE_ENV === 'production'
+              ? {
+                  $gte: startOfDay(add(new Date(queries.date), { hours: 7 })),
+                  $lte: endOfDay(add(new Date(queries.date), { hours: 7 })),
+                }
+              : {
+                  $gte: startOfDay(new Date(queries.date)),
+                  $lte: endOfDay(new Date(queries.date)),
+                },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
         },
