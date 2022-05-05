@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { uniq } from 'lodash';
+import { startOfDay } from 'date-fns';
 import { Model } from 'mongoose';
 import {
   ConflictException,
@@ -20,8 +21,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/users.interface';
 import { ChangeCustomerPasswordDto } from './dto/change-customer-password.dto';
 import { UpdateCustomerInformationDto } from './dto/update-customer-information';
-import * as moment from 'moment';
-import * as momentTz from 'moment-timezone';
+
 @Injectable()
 export class ClientsService {
   constructor(
@@ -299,13 +299,14 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
-      console.log(momentTz(new Date(queries.date)).startOf('day').toDate(), 1);
-      console.log(momentTz(new Date(queries.date)).endOf('day').toDate(), 2);
+      console.log(startOfDay(new Date(queries.date)), 1);
+      console.log(startOfDay(new Date(queries.date)), 2);
+
       query.push({
         $match: {
           startTime: {
-            $gte: momentTz(new Date(queries.date)).startOf('day').toDate(),
-            $lte: momentTz(new Date(queries.date)).endOf('day').toDate(),
+            $gte: startOfDay(new Date(queries.date)),
+            $lte: startOfDay(new Date(queries.date)),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
