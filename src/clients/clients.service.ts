@@ -267,7 +267,9 @@ export class ClientsService {
   async getLines(queries: any) {
     const query: any = [
       {
-        $match: {},
+        $match: {
+          deleted: false,
+        },
       },
     ];
 
