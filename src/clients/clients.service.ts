@@ -1,6 +1,15 @@
 import * as bcrypt from 'bcrypt';
 import { uniq } from 'lodash';
-import { startOfDay, endOfDay, add } from 'date-fns';
+import {
+  endOfDay,
+  add,
+  sub,
+  getDate,
+  setDate,
+  setMinutes,
+  setSeconds,
+  setMilliseconds,
+} from 'date-fns';
 import { Model } from 'mongoose';
 import {
   ConflictException,
@@ -301,16 +310,26 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
-      console.log(queries.date);
-      console.log(new Date(queries.date));
-      console.log(new Date(queries.date), 1);
-      console.log(endOfDay(new Date(queries.date)), 2);
+      const date = getDate(new Date(queries.date));
+      const targetTime = setMilliseconds(
+        setSeconds(setMinutes(setDate(new Date(), date), 0), 0),
+        0,
+      );
+
+      console.log(targetTime);
+      // console.log(sub(targetTime, { hours: 7 }));
+      // console.log(sub(endOfDay(targetTime), { hours: 7 }));
+
+      console.log({
+        $gte: targetTime,
+        $lte: add(targetTime, { hours: 24 }),
+      });
 
       query.push({
         $match: {
           startTime: {
-            $gte: new Date(queries.date),
-            $lte: endOfDay(new Date(queries.date)),
+            $gte: targetTime,
+            $lte: add(targetTime, { hours: 24 }),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
