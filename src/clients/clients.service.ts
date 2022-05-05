@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { uniq } from 'lodash';
-import { startOfDay } from 'date-fns';
+import { startOfDay, endOfDay } from 'date-fns';
 import { Model } from 'mongoose';
 import {
   ConflictException,
@@ -301,13 +301,13 @@ export class ClientsService {
     if (queries.startingPoint && queries.destination && queries.date) {
       console.log(new Date(queries.date));
       console.log(startOfDay(new Date(queries.date)), 1);
-      console.log(startOfDay(new Date(queries.date)), 2);
+      console.log(endOfDay(new Date(queries.date)), 2);
 
       query.push({
         $match: {
           startTime: {
             $gte: startOfDay(new Date(queries.date)),
-            $lte: startOfDay(new Date(queries.date)),
+            $lte: endOfDay(new Date(queries.date)),
           },
           'route.startingPoint': queries.startingPoint,
           'route.destination': queries.destination,
