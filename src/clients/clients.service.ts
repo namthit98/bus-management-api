@@ -299,6 +299,7 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
+      console.log(queries.date);
       console.log(new Date(queries.date));
       console.log(startOfDay(new Date(queries.date)), 1);
       console.log(endOfDay(new Date(queries.date)), 2);
