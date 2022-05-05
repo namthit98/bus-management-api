@@ -310,9 +310,8 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
-      const date = getDate(new Date(queries.date));
       const targetTime = setMilliseconds(
-        setSeconds(setMinutes(setDate(new Date(), date), 0), 0),
+        setSeconds(setMinutes(new Date(queries.date), 0), 0),
         0,
       );
 
