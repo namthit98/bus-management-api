@@ -299,13 +299,19 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
-      // console.log(queries.date, -1);
-      // console.log(
-      //   momentTz(queries.date).startOf('day').tz('Asia/Ho_Chi_Minh').toDate(),
-      //   0,
-      // );
-      // console.log(moment(queries.date).startOf('day').toDate(), 1);
-      // console.log(moment(queries.date).startOf('day').utc().toDate(), 3);
+      console.log(new Date(queries.date), -1);
+      console.log(
+        momentTz(new Date(queries.date))
+          .startOf('day')
+          .tz('Asia/Ho_Chi_Minh')
+          .toDate(),
+        0,
+      );
+      console.log(moment(new Date(queries.date)).startOf('day').toDate(), 1);
+      console.log(
+        moment(new Date(queries.date)).startOf('day').utc().toDate(),
+        3,
+      );
       query.push({
         $match: {
           startTime: {
