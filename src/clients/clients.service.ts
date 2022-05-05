@@ -303,13 +303,13 @@ export class ClientsService {
     if (queries.startingPoint && queries.destination && queries.date) {
       console.log(queries.date);
       console.log(new Date(queries.date));
-      console.log(startOfDay(add(new Date(queries.date), { hours: 7 })), 1);
+      console.log(startOfDay(new Date(queries.date)), 1);
       console.log(endOfDay(add(new Date(queries.date), { hours: 7 })), 2);
 
       query.push({
         $match: {
           startTime: {
-            $gte: startOfDay(add(new Date(queries.date), { hours: 7 })),
+            $gte: startOfDay(new Date(queries.date)),
             $lte: endOfDay(add(new Date(queries.date), { hours: 7 })),
           },
           'route.startingPoint': queries.startingPoint,
