@@ -313,22 +313,7 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
-      console.log(queries.date);
       const targetTime = new Date(queries.date);
-      console.log(format(targetTime, 'dd/MM/yyyy HH:mm'));
-      console.log(format(startOfDay(targetTime), 'dd/MM/yyyy HH:mm'));
-      console.log(format(endOfDay(targetTime), 'dd/MM/yyyy HH:mm'));
-      console.log(targetTime);
-      // console.log(sub(targetTime, { hours: 7 }));
-      // console.log(sub(endOfDay(targetTime), { hours: 7 }));
-
-      console.log(process.env.NODE_ENV);
-      console.log({
-        $gte: startOfDay(targetTime),
-        $lte: add(startOfDay(targetTime), {
-          hours: 24,
-        }),
-      });
 
       query.push({
         $match: {
