@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { uniq } from 'lodash';
 import {
+  startOfDay,
   endOfDay,
   add,
   sub,
@@ -10,6 +11,7 @@ import {
   setMinutes,
   setSeconds,
   setMilliseconds,
+  format,
 } from 'date-fns';
 import { Model } from 'mongoose';
 import {
@@ -313,7 +315,9 @@ export class ClientsService {
     if (queries.startingPoint && queries.destination && queries.date) {
       console.log(queries.date);
       const targetTime = new Date(queries.date);
-
+      console.log(format(targetTime, 'DD/MM/YYYY'));
+      console.log(format(startOfDay(targetTime), 'DD/MM/YYYY'));
+      console.log(format(endOfDay(targetTime), 'DD/MM/YYYY'));
       console.log(targetTime);
       // console.log(sub(targetTime, { hours: 7 }));
       // console.log(sub(endOfDay(targetTime), { hours: 7 }));
