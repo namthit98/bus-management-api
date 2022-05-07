@@ -311,6 +311,7 @@ export class ClientsService {
     );
 
     if (queries.startingPoint && queries.destination && queries.date) {
+      console.log(queries.date);
       const targetTime = new Date(queries.date);
 
       console.log(targetTime);
